@@ -41,9 +41,13 @@ jobs:
       - name: Ensure dependency_overrides in pubspec.yaml
         run: |
           if ! grep -q "dependency_overrides" pubspec.yaml; then
-            printf "\ndependency_overrides:\n  intl: ^0.17.0\n" >> pubspec.yaml
+            printf "\ndependency_overrides:\n  intl: ^0.17.0\n  platform: ^3.1.0\n" >> pubspec.yaml
           fi
-          tail -n 5 pubspec.yaml
+          # Đảm bảo platform override luôn có mặt
+          if ! grep -q "platform:" pubspec.yaml; then
+            sed -i '/dependency_overrides:/a \  platform: ^3.1.0' pubspec.yaml
+          fi
+          tail -n 6 pubspec.yaml
 
       - name: Flutter clean
         run: flutter clean

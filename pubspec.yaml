@@ -145,4 +145,4 @@ flutter:
 
 dependency_overrides:
   intl: ^0.17.0
-  platform: ^3.1.0
+  platform: 3.0.2

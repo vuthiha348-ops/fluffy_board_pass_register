@@ -43,7 +43,7 @@ class _DashboardState extends State<Dashboard> {
   bool storageReady = false;
   bool introStorageReady = false;
   bool checkedLogin = false;
-  bool online = true;
+  bool online = false;
   bool loggedIn = false;
   late String authToken;
   late String username;
@@ -65,27 +65,10 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     String name = AppLocalizations.of(context)!.dashboard;
-    print(checkedLogin);
-    print(storageReady);
-    print(introStorageReady);
     if ((!checkedLogin && !storageReady) || !introStorageReady)
       return (Dashboard.loading(name, context));
-    WidgetsBinding.instance!.addPostFrameCallback((_) => {
-          print("PostframeCallBack"),
-          if (checkedLogin && !loggedIn && online)
-            {
-              print("Switching to login"),
-              Navigator.of(context).pushReplacementNamed('/login')
-            }
-        });
-    if (!checkedLogin && !loggedIn && online) return (Dashboard.loading(name, context));
-    if (introStorage.getItem('read') == null) print("Switching to tutorial");
-    SchedulerBinding.instance!.addPostFrameCallback((_) => {
-          if (checkedLogin && !loggedIn && online)
-            Navigator.of(context).pushNamed('/intro')
-        });
-    if (introStorage.getItem('read') == null) return (Dashboard.loading(name, context));
 
+    // OFFLINE BYPASS: bỏ qua Login/Register/Intro, vào thẳng FileManager
     return (FileManager(authToken, username, id, online));
   }
 

@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: zavenco/flutter:2.10.5
+      image: zavenco/flutter:3.3.6
 
     steps:
       - name: Checkout code

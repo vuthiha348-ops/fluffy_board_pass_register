@@ -2,10 +2,6 @@ name: Build Offline APK
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - master
-      - main
 
 permissions:
   contents: read
@@ -31,26 +27,18 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Ensure .env exists
+      - name: Verify pubspec.yaml
+        run: |
+          echo "--- tail pubspec.yaml ---"
+          tail -n 10 pubspec.yaml
+
+      - name: Verify .env
         run: |
           if [ ! -f .env ]; then
             echo "REST_API_URL=http://localhost:8080" > .env
           fi
           cat .env
 
-            - name: Ensure dependency_overrides in pubspec.yaml
-        run: |
-          if ! grep -q "dependency_overrides" pubspec.yaml; then
-            printf "\ndependency_overrides:\n  intl: ^0.17.0\n  platform: 3.0.2\n" >> pubspec.yaml
-          else
-            if grep -q "platform:" pubspec.yaml; then
-              sed -i 's/platform: \^3.1.0/platform: 3.0.2/' pubspec.yaml
-            else
-              sed -i '/dependency_overrides:/a \  platform: 3.0.2' pubspec.yaml
-            fi
-          fi
-          tail -n 6 pubspec.yaml
-          
       - name: Flutter clean
         run: flutter clean
 
